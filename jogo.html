@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Associação - Aspas e Travessão</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .column {
+            width: 45%;
+        }
+        .card {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .correct {
+            background-color: #a0e3a0;
+        }
+        .incorrect {
+            background-color: #e3a0a0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Jogo de Associação - Aspas e Travessão</h1>
+    <p>Arraste e solte para associar a frase ao código correto.</p>
+
+    <div class="container">
+        <div class="column" id="sentences">
+            <h3>Sentenças</h3>
+            <div class="card" draggable="true" id="sentence1">João falou: — Amanhã será um grande dia.</div>
+            <div class="card" draggable="true" id="sentence2">Ele disse: "O conhecimento é poder."</div>
+            <div class="card" draggable="true" id="sentence3">Ela disse que estava "feliz" com o resultado.</div>
+            <div class="card" draggable="true" id="sentence4">O evento será realizado no formato "workshop".</div>
+            <div class="card" draggable="true" id="sentence5">Lucas levantou-se — estava na hora de agir.</div>
+        </div>
+
+        <div class="column" id="codes">
+            <h3>Códigos</h3>
+            <div class="card" id="code1" ondrop="drop(event)" ondragover="allowDrop(event)">
+                console.log("Amanhã será um grande dia");
+            </div>
+            <div class="card" id="code2" ondrop="drop(event)" ondragover="allowDrop(event)">
+                String quote = "O conhecimento é poder.";
+            </div>
+            <div class="card" id="code3" ondrop="drop(event)" ondragover="allowDrop(event)">
+                let status = "feliz"; // Ironia
+            </div>
+            <div class="card" id="code4" ondrop="drop(event)" ondragover="allowDrop(event)">
+                const eventType = "workshop";
+            </div>
+            <div class="card" id="code5" ondrop="drop(event)" ondragover="allowDrop(event)">
+                console.log("Lucas levantou-se. Estava na hora de agir.");
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Permitir o drop
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        // Arrastar
+        document.querySelectorAll('.card[draggable="true"]').forEach(card => {
+            card.ondragstart = function(ev) {
+                ev.dataTransfer.setData("text", ev.target.id);
+            };
+        });
+
+        // Soltar e verificar
+        function drop(ev) {
+            ev.preventDefault();
+            var sentenceId = ev.dataTransfer.getData("text");
+            var sentence = document.getElementById(sentenceId);
+            var code = ev.target;
+
+            if (validatePair(sentenceId, code.id)) {
+                code.appendChild(sentence);
+                sentence.classList.add("correct");
+            } else {
+                sentence.classList.add("incorrect");
+            }
+        }
+
+        // Validação de pares
+        function validatePair(sentenceId, codeId) {
+            const pairs = {
+                "sentence1": "code1",
+                "sentence2": "code2",
+                "sentence3": "code3",
+                "sentence4": "code4",
+                "sentence5": "code5"
+            };
+
+            return pairs[sentenceId] === codeId;
+        }
+    </script>
+
+</body>
+</html>
